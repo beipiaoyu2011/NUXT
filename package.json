@@ -1,0 +1,43 @@
+{
+  "name": "wz",
+  "version": "1.0.0",
+  "description": "wz",
+  "author": "wz",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env BASE_URL='https://postman-echo.com' nuxt",
+    "build": "nuxt build",
+    "start": "cross-env NODE_ENV=production BASE_URL=https://postman-echo.com node server.js",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "precommit": "npm run lint",
+    "text_baijie": "node readText.js baijie",
+    "text_mingdian": "node readText.js mingdian",
+    "promise": "node promise.js"
+  },
+  "dependencies": {
+    "css-loader": "^1.0.0",
+    "nuxt": "^1.0.0",
+    "vue-style-loader": "^4.1.1"
+  },
+  "devDependencies": {
+    "@nuxtjs/axios": "^5.3.1",
+    "axios": "^0.18.0",
+    "babel-eslint": "^8.2.1",
+    "cheerio": "^1.0.0-rc.2",
+    "cross-env": "^5.2.0",
+    "eslint": "^4.15.0",
+    "eslint-friendly-formatter": "^3.0.0",
+    "eslint-loader": "^1.7.1",
+    "eslint-plugin-vue": "^4.0.0",
+    "express": "^4.16.3",
+    "jquery": "^3.2.1",
+    "jsdom": "^11.11.0",
+    "less-loader": "^4.1.0",
+    "node-less": "^1.0.0",
+    "normalize.css": "^8.0.0",
+    "request": "^2.87.0",
+    "vuex": "^3.0.1",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
