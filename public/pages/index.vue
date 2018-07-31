@@ -1,15 +1,19 @@
 <template>
   <section class="container">
     <div>
-      <!-- <app-logo/> -->
-      <!-- <Loading></Loading> -->
-      <!-- <h1 class="title">
-        w
-      </h1>
-      <h2 class="subtitle">
-        <img :src="title" alt="">
-      </h2>
-      <h2>请求列表11</h2> -->
+      <div class="container">
+        <div class="left">
+          <h2><nuxt-link to="/">Players</nuxt-link></h2>
+          <ul class="players">
+            <li v-for="user in users" :key="user.id">
+              <nuxt-link :to="'/'+ user.id">{{user.name}}</nuxt-link>
+            </li>
+          </ul>
+        </div>
+        <div class="right">
+          <nuxt-child :key="$route.params.id"></nuxt-child>
+        </div>
+      </div>
       <nuxt-link to="/about">Go to about</nuxt-link>
       <br>
       <nuxt-link to="/secret">Go to secret</nuxt-link>
@@ -19,15 +23,6 @@
       <ul>
         <li v-for="(key, value) in content" :key="value">{{value}} : {{key}}</li>
       </ul>
-      <!-- <ul>
-        <li v-for="(n, v) in content_two" :key="n">{{v}} : {{n}}</li>
-      </ul> -->
-      <!-- <div>url: {{content.url}}</div> -->
-
-      <!-- <div class="links">
-        <a href="https://nuxtjs.org/" target="_blank" class="button--green">Documentation</a>
-        <a href="https://github.com/nuxt/nuxt.js" target="_blank" class="button--grey">GitHub</a>
-      </div> -->
     </div>
   </section>
 </template>
@@ -51,36 +46,27 @@ export default {
     return {
       title: img,
       content: null,
-      content_two: null
+      content_two: null,
+      users: null
     }
   },
-  // mounted() {
-  //   console.log(this.$nuxt);    
-  //   this.$nextTick(() => {
-  //     this.$nuxt.$loading.start();
-  //   })
-  // },
   created() {
-    // console.log('===========', store);    
-    // console.log(this);
-    // console.log(this.$nuxt);
-    // this.content_two = JSON.stringify(this.$options);
-
-
+    
+    
   },
   components: {
     AppLogo,
     Loading
   },
-  asyncData({ params, app, store }, callback) {
+  asyncData({ params, app, store, env }, callback) {
     console.log('======app=======');
-    console.log(store);    
+    // console.log(store);
     axios.defaults.baseURL = "https://postman-echo.com";
     if (store.state.index_data) {
       console.log('data');
       callback(null, { content: store.state.index_data[0], content_two: store.state.index_data[1] });
     } else {
-      console.log('no data');      
+      console.log('no data');
       let p1 = () => {
         return new Promise(resolve => {
           axios.get('/get', {
@@ -107,34 +93,12 @@ export default {
           })
         });
       };
-
       Promise.all([p1(), p2()]).then(res => {
         // console.log(res);
         store.commit('addData', res);
-        callback(null, { content: res[0], content_two: res[1] });
-
+        callback(null, { content: res[0], content_two: res[1], users: env.users });
       });
     }
-    // let r1 = () => {
-    //   return axios.get('/get', {
-    //     params: {
-    //       foo1: 'bar1',
-    //       foo2: 'bar2'
-    //     }
-    //   });
-    // };
-    // let r2 = () => {
-    //   return axios.get('/get', {
-    //     params: {
-    //       foo3: 'bar3',
-    //       foo4: 'bar5'
-    //     }
-    //   });
-    // };
-
-    // axios.all([r1(), r2()]).then(axios.spread((res1, res2) => {
-    //   callback(null, { content: res1.data, content_two: res2.data })
-    // }));
 
   },
 
@@ -176,5 +140,49 @@ export default {
 
 .links {
   padding-top: 15px;
+}
+
+.container {
+  width: 100%;
+  min-height: 300px;
+  margin: 0;
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+.left {
+  width: 20%;
+  position: absolute;
+  top: 0;
+  left: 20px;
+  min-height: 300px;
+}
+.right {
+  width: 80%;
+  position: absolute;
+  top: 0;
+  left: 22%;
+  text-align: left;
+  line-height: 260px;
+  border: 1px #ddd solid;
+  min-height: 300px;
+  overflow: hidden;
+}
+.players {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+.players li a {
+  display: block;
+  border: 1px #ddd solid;
+  padding: 10px;
+  text-align: left;
+  color: #222;
+  text-decoration: none;
+  text-align: center;
+}
+.players li a:hover {
+  background: orange;
+  color: white;
 }
 </style>
