@@ -3,6 +3,7 @@ var cheerio = require('cheerio');
 // var fs = require('fs');
 var fetchUrl = 'https://www.sjtxt.la/book/73017/';
 var all_url = [];
+var all_titles = [];
 var fetchData = require('./fetchData');
 var LIST_FILE_NAME = '';//章节 list
 var OUTPUT_FILE_NAME = '';// 输出文件
@@ -32,17 +33,20 @@ axios.get(fetchUrl).then(res => {
     }
     $list.each(function (n) {
         var href = '';
+        var name = $(this).text();
         if (argv == 'baijie') {
             href = fetchUrl + $(this).attr('href');
         } else if (argv == 'mingdian') {
             href = fetchUrl + $(this).attr('href').split('/')[2];
         }
         all_url.push(href);
+        all_titles.push(name);
     });
     // console.log(fetchUrl, all_url);
     // return;
     fetchData({
         URLS: all_url,
+        TITLES: all_titles,
         LIST_FILE_NAME: LIST_FILE_NAME,
         OUTPUT_FILE_NAME: OUTPUT_FILE_NAME,
         CONTENT_ID: CONTENT_ID

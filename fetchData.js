@@ -6,10 +6,11 @@ var fetchData = function (opts) {
     var url = opts.URLS,
         LIST_FILE_NAME = opts.LIST_FILE_NAME,
         OUTPUT_FILE_NAME = opts.OUTPUT_FILE_NAME,
+        TITLES = opts.TITLES,
         CONTENT_ID = opts.CONTENT_ID;
     var writeStream = fs.createWriteStream(LIST_FILE_NAME);
     for (var i = 0; i < url.length; i++) {
-        writeStream.write(i + ' ' + url[i] + '\n');
+        writeStream.write(TITLES[i] + ' ' + url[i] + '\n');
     }
     writeStream.end();
     var arr = [];
@@ -18,10 +19,10 @@ var fetchData = function (opts) {
             var _url = url[i];
             axios.get(_url).then(res => {
                 var $ = cheerio.load(res.data, {
-                    ignoreWhitespace: true,
-                    xmlMode: true
-                });                
-                arr[i] = '============' + i + '============\n' + $(CONTENT_ID).text();
+                    ignoreWhitespace: false,
+                    xmlMode: false
+                });
+                arr[i] = '\n' + '\n' + $(CONTENT_ID).text();
                 resolve();
             });
         });
@@ -32,7 +33,7 @@ var fetchData = function (opts) {
     Promise.all(promiseArr).then(function () {
         var writeStream = fs.createWriteStream(OUTPUT_FILE_NAME);
         for (var i = 0; i < arr.length; i++) {
-            writeStream.write(i + ' ' + arr[i] + '\n');
+            writeStream.write(arr[i] + '\n');
         }
         writeStream.on('data', () => {
             console.log('写入开始');
