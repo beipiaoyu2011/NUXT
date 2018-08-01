@@ -1,10 +1,80 @@
+var bodyParser = require('body-parser');
+var session = require('express-session');
+const querystring = require('querystring')
+const makeSign = require('./tools/signature');
 module.exports = {
   dev: (process.env.NODE_ENV !== 'production'),
   baseUrl: process.env.BASE_URL || 'localhost://3000',
   modules: [
     '@nuxtjs/axios',
-    ['~/modules/simple.js', { token: '123456' }]
+    '@nuxtjs/proxy',
+    // ['~/modules/simple.js', { token: '123456' }],
+    // '@gauseen/nuxt-proxy',
   ],
+  proxy: [
+    [
+      '/api',
+      {
+        target: 'https://nuxt-auth-routes.glitch.me',
+        pathRewrite: (path, req, res) => {
+          if (req.method == "GET") {
+            var pathname = req._parsedUrl.pathname.replace(/^\/api\//, '')
+            var queryObj = querystring.parse(req._parsedUrl.query)
+            // var d = makeSign(app_key, app_secret, req.method, pathname, queryObj).query;
+            var d = makeSign('', '', req.method, pathname, queryObj).query;
+            return '/' + pathname + '?' + querystring.stringify(d)
+          }
+          return path.replace('/api', '')
+        },
+        onProxyReq: (proxyReq, req, res) => {
+          if (req.method == "POST" && req.body) {
+
+            // Remove body-parser body object from the request
+            var queryObj = req.body
+            if (req.body) delete req.body;
+
+            var pathname = req._parsedUrl.pathname.replace(/^\/api\//, '')
+            var body = makeSign(app_key, app_secret, req.method, pathname, queryObj).query;
+
+            body = Object.keys(body).map(function (key) {
+              return encodeURIComponent(key) + '=' + encodeURIComponent(body[key])
+            }).join('&');
+
+            // // Update header
+            proxyReq.setHeader('content-type', 'application/x-www-form-urlencoded');
+            proxyReq.setHeader('content-length', body.length || 0);
+
+            // // Write out body changes to the proxyReq stream
+            proxyReq.write(body);
+            proxyReq.end();
+          }
+        }
+      }
+    ],
+
+  ],
+  // proxyTable: {
+  //   '/api': { target: 'https://nuxt-auth-routes.glitch.me/', ws: false }
+  // },
+  /*
+ ** Add server middleware
+ ** Nuxt.js uses `connect` module as server
+ ** So most of express middleware works with nuxt.js server middleware
+ */
+  // serverMiddleware: [
+  //   // body-parser middleware
+  //   bodyParser.json(),
+  //   // session middleware
+  //   session({
+  //     secret: 'super-secret-key',
+  //     resave: false,
+  //     saveUninitialized: false,
+  //     cookie: { maxAge: 60000 }
+  //   }),
+  //   // Api middleware
+  //   // We add /api/login & /api/logout routes
+  //   '~/api'
+  // ],
   /*
   ** Headers of the page
   */

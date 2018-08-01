@@ -9,14 +9,18 @@
 <script>
 import axios from 'axios';
 export default {
-    asyncData({ params }, callback) {
+    async asyncData({ params }, callback) {
         console.log(params.id);
-
-        return axios.get(`https://jsonplaceholder.typicode.com/posts/${params.id}`).then(res => {
-            callback(null, {
-                post: res.data
-            });
+        let { data } = await axios.get(`https://jsonplaceholder.typicode.com/posts/${params.id}`);
+        // console.log(data);
+        callback(null, {
+            post: data
         });
+        // return axios.get(`https://jsonplaceholder.typicode.com/posts/${params.id}`).then(res => {
+        // callback(null, {
+        //     post: res.data
+        // });
+        // });
 
     },
     head() {
