@@ -16,12 +16,19 @@
           <nuxt-child :key="$route.params.id"></nuxt-child>
         </div>
       </div>
+      <div>
+        <p>{{userAgent}}</p>
+        <p>
+          <nuxt-link to="/posts">Go to post</nuxt-link>
+        </p>
+      </div>
+      <br><br>
       <nuxt-link to="/about">Go to about</nuxt-link>
-      <br>
+      <br><br>
       <nuxt-link to="/secret">Go to secret</nuxt-link>
-      <br>
+      <br><br>
       <button @click="alertLog">notifications me</button>
-      <br> 
+      <br><br>
       <button @click="showLoginError">{{$store.state.count}} notifications me</button>
       <div>{{content_two}}</div>
       <ul>
@@ -49,27 +56,27 @@ export default {
     }
   },
   created() {
-    
+
   },
   notifications: {
     showLoginInfo: {
       title: 'Welcome!',
       message: 'Hello from nuxt.js',
       type: 'warn',
-      timeout: 1000000000,
+      timeout: 1000,
     },
     showLoginError: {
       title: 'Welcome!',
       message: 'Hello from nuxt.js',
       type: 'error',
-      timeout: 1000000000
+      timeout: 1000
     }
   },
   components: {
     AppLogo,
     Loading
   },
-  asyncData({ params, app, store, env }, callback) {
+  asyncData({ params, app, store, env, req }, callback) {
     console.log('======app=======');
     // console.log(store);
     axios.defaults.baseURL = "https://postman-echo.com";
@@ -105,9 +112,13 @@ export default {
         });
       };
       Promise.all([p1(), p2()]).then(res => {
-        // console.log(res);
         store.commit('addData', res);
-        callback(null, { content: res[0], content_two: res[1], users: env.users });
+        callback(null, {
+          content: res[0],
+          content_two: res[1],
+          users: env.users,
+          userAgent: (req ? req.headers['user-agent'] : (typeof navigator !== 'undefined' ? navigator.userAgent : 'No user agent (generated)'))
+        });
       });
     }
 
@@ -117,7 +128,7 @@ export default {
     alertLog() {
       this.showLoginInfo();
       console.log(this);
-      
+
       this.$store.commit('increment')
     }
   }

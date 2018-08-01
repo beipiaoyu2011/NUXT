@@ -32,6 +32,6 @@ export default {
   padding-top: 200px;
   font-size: 30px;
   font-family: sans-serif;
-  color: red;
+  color: black;
 }
 </style>
