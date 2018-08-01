@@ -9,7 +9,7 @@
 <script>
 export default {
     validate({params, query, store}){
-        console.log(params, query, store);
+        // console.log(params, query, store);
         return !isNaN(params.id);
     },
     asyncData({ params, env }) {

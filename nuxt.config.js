@@ -63,7 +63,10 @@ module.exports = {
     'normalize.css',
     '@/less/index.css'
   ],
-  plugins: ['~/plugins/axios.js'],
+  plugins: [
+    '~/plugins/axios.js',
+    { src: '~/plugins/vue-notifications.js', ssr: false }
+  ],
   // mode:'spa',
   generate: {
     dir: 'cdn',

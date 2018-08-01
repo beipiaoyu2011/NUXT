@@ -2,3 +2,6 @@ ul li {
   list-style: none;
   text-align: left;
 }
+.mini-toastr {
+  right: 50% !important;
+}

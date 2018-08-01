@@ -3,7 +3,9 @@
     <div>
       <div class="container">
         <div class="left">
-          <h2><nuxt-link to="/">Players</nuxt-link></h2>
+          <h2>
+            <nuxt-link to="/">Players</nuxt-link>
+          </h2>
           <ul class="players">
             <li v-for="user in users" :key="user.id">
               <nuxt-link :to="'/'+ user.id">{{user.name}}</nuxt-link>
@@ -18,7 +20,9 @@
       <br>
       <nuxt-link to="/secret">Go to secret</nuxt-link>
       <br>
-      <button @click="alertLog">{{$store.state.count}}</button>
+      <button @click="alertLog">notifications me</button>
+      <br> 
+      <button @click="showLoginError">{{$store.state.count}} notifications me</button>
       <div>{{content_two}}</div>
       <ul>
         <li v-for="(key, value) in content" :key="value">{{value}} : {{key}}</li>
@@ -33,16 +37,10 @@ import Loading from '~/components/loading.vue'
 import img from '@@/public/assets/tou.jpg'
 // import axios from '@/plugins/axios';
 import axios from 'axios';
-import { resolve } from 'url';
 import j1 from '@@/JSON_1.json';
-
 export default {
-  // fetch({store, params}){
-  //   return axios.get("http://my-api/stars").then(res => {
-  //     // store.commit('setStars', res.data);
-  //   });
-  // },
   data() {
+    console.log(this);
     return {
       title: img,
       content: null,
@@ -52,7 +50,20 @@ export default {
   },
   created() {
     
-    
+  },
+  notifications: {
+    showLoginInfo: {
+      title: 'Welcome!',
+      message: 'Hello from nuxt.js',
+      type: 'warn',
+      timeout: 1000000000,
+    },
+    showLoginError: {
+      title: 'Welcome!',
+      message: 'Hello from nuxt.js',
+      type: 'error',
+      timeout: 1000000000
+    }
   },
   components: {
     AppLogo,
@@ -104,6 +115,9 @@ export default {
 
   methods: {
     alertLog() {
+      this.showLoginInfo();
+      console.log(this);
+      
       this.$store.commit('increment')
     }
   }
