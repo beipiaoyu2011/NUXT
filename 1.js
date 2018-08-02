@@ -27,16 +27,19 @@
 // console.log(myEmitter.getMaxListeners());
 // console.log(myEmitter.eventNames());
 
-var miniToastr = require('mini-toastr');
+// var miniToastr = require('mini-toastr');
 
-const toastTypes = {
-    success: 'success',
-    error: 'error',
-    info: 'info',
-    warn: 'warn'
-};
+// const toastTypes = {
+//     success: 'success',
+//     error: 'error',
+//     info: 'info',
+//     warn: 'warn'
+// };
 
-miniToastr.init({ types: toastTypes });
+// miniToastr.init({ types: toastTypes });
 
-miniToastr.success({ message: 11 })
+// miniToastr.success({ message: 11 })
+
+console.log(require('./public/api'));
+
 

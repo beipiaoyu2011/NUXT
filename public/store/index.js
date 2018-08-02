@@ -20,12 +20,17 @@ const store = () => {
             },
             SET_USER(state, user) {
                 state.authUser = user;
+                if (user) {
+                    localStorage.setItem('loginState', true);
+                } else {
+                    localStorage.setItem('loginState', false);
+                }
             }
         },
         actions: {
             // nuxtServerInit is called by Nuxt.js before server-rendering every page
             nuxtServerInit({ commit }, { req }) {
-                console.log(req.session, req.session.authUser);                
+                console.log(8888, req.session, req.session.authUser);
                 if (req.session && req.session.authUser) {
                     commit('SET_USER', req.session.authUser)
                 }
@@ -35,7 +40,7 @@ const store = () => {
                 console.log(data);
                 commit('SET_USER', data);
             },
-            async logout({commit}){
+            async logout({ commit }) {
                 await axios.post('/api/logout');
                 commit('SET_USER', null);
             }

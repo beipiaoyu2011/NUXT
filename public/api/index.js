@@ -1,33 +1,39 @@
 
 var express = require('express');
-const router = express.Router();
+// Create express router
+const router = express.Router()
 
 // Transform req & res to have the same API as express
 // So we can use res.status() & res.json()
-var app = express();
+var app = express()
 router.use((req, res, next) => {
-    Object.setPrototypeOf(req, app.request);
-    Object.setPrototypeOf(res, app.response);
-    req.res = res;
-    res.req = req;
-    next();
-});
+    Object.setPrototypeOf(req, app.request)
+    Object.setPrototypeOf(res, app.response)
+    req.res = res
+    res.req = req
+    next()
+})
+console.log(111, router);
 
-//Add POST - /api/login
+// Add POST - /api/login
 router.post('/login', (req, res) => {
-    if (req.body.username == 'demo' && req.body.password == 'demo') {
-        req.session.authUser = { username: req.body.username };
-        return res.json({ username: req.body.password });
+    console.log(111888888);    
+    if (req.body.username === 'demo' && req.body.password === 'demo') {
+        req.session.authUser = { username: 'demo' }
+        return res.json({ username: 'demo' })
     }
-    res.status(401).json({ message: "Bad credentials" });
-});
+    res.status(401).json({ message: 'Bad credentials' })
+})
 
+// Add POST - /api/logout
 router.post('/logout', (req, res) => {
-    delete req.session.authUser;
-    res.json({ ok: true });
-});
-//Export the server middleware
-return {
+    delete req.session.authUser
+    res.json({ ok: true })
+})
+
+var middleware = {
     path: '/api',
     handler: router
 };
+//Export the server middleware
+module.exports = middleware;

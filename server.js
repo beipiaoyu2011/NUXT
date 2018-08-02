@@ -1,50 +1,42 @@
-// let config = require('./nuxt.config');
-// const app = require('express')();
-// const { Nuxt, Builder } = require('nuxt');
-// const port = process.env.PORT || 3000;
+const { Nuxt, Builder } = require('nuxt')
+const bodyParser = require('body-parser')
+const session = require('express-session')
+const app = require('express')()
 
+// Body parser, to access `req.body`
+app.use(bodyParser.json())
 
-// const nuxt = new Nuxt(config);
-// console.log(config);
+// Sessions to create `req.session`
+app.use(session({
+  secret: 'super-secret-key',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { maxAge: 60000 }
+}))
 
-// // app.use(nuxt);
-// if (config.dev) {
-//     new Builder(nuxt).build().catch(err => {
-//         console.error(error);
-//         process.exit(1);
-//     })
-// }
+// POST `/api/login` to log in the user and add him to the `req.session.authUser`
+app.post('/api/login', function (req, res) {
+  if (req.body.username === 'demo' && req.body.password === 'demo') {
+    req.session.authUser = { username: 'demo' }
+    return res.json({ username: 'demo' })
+  }
+  res.status(401).json({ error: 'Bad credentials' })
+})
 
-// // console.log(config);
+// POST `/api/logout` to log out the user and remove it from the `req.session`
+app.post('/api/logout', function (req, res) {
+  delete req.session.authUser
+  res.json({ ok: true })
+})
 
-// // app.listen(port, '0.0.0.0').then(()=>{
-// //     nuxt.showOpen();
-// // })
-
-// const express = require('express')
-// const request = require('request')
-// const app = express()
-
-// app.use('/', function (req, res) {
-//     const url = 'https://nuxt-auth-routes.glitch.me' + req.url
-//     req.pipe(request(url)).pipe(res.set('Access-Control-Allow-Origin', '*'))
-// });
-
-// app.listen(process.env.PORT || 3001);
-
-// var express = require('express');
-// var app = express();
-
-// var cors = require('cors');
-// var bodyParser = require('body-parser');
-
-// //enables cors
-// app.use(cors({
-//   'allowedHeaders': ['sessionId', 'Content-Type'],
-//   'exposedHeaders': ['sessionId'],
-//   'origin': '*',
-//   'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//   'preflightContinue': false
-// }));
-
-// require('./router/index')(app);
+// We instantiate Nuxt.js with the options
+const isProd = process.env.NODE_ENV === 'production'
+const nuxt = new Nuxt({ dev: !isProd })
+// No build in production
+if (!isProd) {
+  const builder = new Builder(nuxt)
+  builder.build()
+}
+app.use(nuxt.render)
+app.listen(3000)
+console.log('Server is listening on http://localhost:3000')
