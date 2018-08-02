@@ -1,8 +1,7 @@
 <template>
     <div class="mylogin">
-        login page
         <div class="container">
-            <form @submit.prevent="login">
+            <form @submit.prevent="login" v-if="!$store.state.authUser">
                 <p class="error" v-if="formError">{{formError}}</p>
                 <p>
                     <i>
@@ -15,6 +14,13 @@
                 <p>password： <input v-model="formPassword" type="password" name="password"></p>
                 <button type="submit">Login</button>
             </form>
+            <div v-else>
+                Hello, {{$store.state.authUser && $store.state.authUser.username}} ,
+                <pre>I am the secret content, I am shown only when the use is connected.</pre>
+                <p>
+                    <i>You can also refresh this page, you'll still be connected!</i>
+                </p>
+            </div>
         </div>
     </div>
 </template>
@@ -35,6 +41,7 @@ export default {
                     password: this.formPassword
                 });
             } catch (e) {
+                console.log('e', e);
                 this.formError = e.message;
             }
         }
