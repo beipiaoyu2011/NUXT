@@ -1,6 +1,6 @@
 import Vuex from 'vuex';
 import axios from 'axios';
-// axios.defaults.baseURL = 'https://nuxt-auth-routes.glitch.me';
+axios.defaults.baseURL = 'https://nuxt-auth-routes.glitch.me';
 const store = () => {
     return new Vuex.Store({
         state: {
@@ -24,7 +24,7 @@ const store = () => {
         },
         actions: {
             async login({ commit }, { username, password }) {
-                const { data } = await axios.get('/api/login', { params: { username, password } });
+                const { data } = await axios.post('/api/login',  { username, password });
                 console.log(data);
                 commit('SET_USER', data);
             }
