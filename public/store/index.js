@@ -34,6 +34,10 @@ const store = () => {
                 const { data } = await axios.post('/api/login', { username, password });
                 console.log(data);
                 commit('SET_USER', data);
+            },
+            async logout({commit}){
+                await axios.post('/api/logout');
+                commit('SET_USER', null);
             }
         }
     });

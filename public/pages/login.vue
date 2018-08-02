@@ -20,6 +20,7 @@
                 <p>
                     <i>You can also refresh this page, you'll still be connected!</i>
                 </p>
+                <button @click="logout">LOGOUT</button>
             </div>
         </div>
     </div>
@@ -40,6 +41,14 @@ export default {
                     username: this.formUsername,
                     password: this.formPassword
                 });
+            } catch (e) {
+                console.log('e', e);
+                this.formError = e.message;
+            }
+        },
+        async logout() {
+            try {
+                await this.$store.dispatch('logout');
             } catch (e) {
                 console.log('e', e);
                 this.formError = e.message;

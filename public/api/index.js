@@ -1,5 +1,5 @@
 
-import express from 'express';
+var express = require('express');
 const router = express.Router();
 
 // Transform req & res to have the same API as express
@@ -27,7 +27,7 @@ router.post('/logout', (req, res) => {
     res.json({ ok: true });
 });
 //Export the server middleware
-export default {
+return {
     path: '/api',
     handler: router
 };
